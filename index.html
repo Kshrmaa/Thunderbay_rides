@@ -137,6 +137,92 @@
     document.getElementById("rides").innerText =
       "Ride search will be connected to the database next.";
   }
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://qsfrxafsspbgydydmbew.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_EgDONXhtnORGe8MCcbL9bA_ZyTWdSjZ";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  async function postRide() {
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    const seats = document.getElementById("seats").value;
+    const price = document.getElementById("price").value;
+
+    const message = document.getElementById("message");
+
+    if (!from || !to || !date || !time || !seats || !price) {
+      message.innerText = "Please fill in all fields.";
+      return;
+    }
+
+    message.innerText = "Posting ride...";
+
+    const { error } = await supabaseClient
+      .from("rides")
+      .insert([
+        {
+          from_location: from,
+          to_location: to,
+          ride_date: date,
+          ride_time: time,
+          seats: Number(seats),
+          price: Number(price)
+        }
+      ]);
+
+    if (error) {
+      console.error(error);
+      message.innerText = "Error posting ride: " + error.message;
+      return;
+    }
+
+    message.innerText = "✅ Ride posted successfully!";
+
+    document.getElementById("from").value = "";
+    document.getElementById("to").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("time").value = "";
+    document.getElementById("seats").value = "";
+    document.getElementById("price").value = "";
+  }
+
+  async function findRides() {
+    const ridesDiv = document.getElementById("rides");
+    ridesDiv.innerText = "Loading rides...";
+
+    const { data, error } = await supabaseClient
+      .from("rides")
+      .select("*")
+      .order("ride_date", { ascending: true });
+
+    if (error) {
+      ridesDiv.innerText = "Error loading rides: " + error.message;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      ridesDiv.innerText = "No rides available.";
+      return;
+    }
+
+    ridesDiv.innerHTML = data.map(ride => `
+      <div style="border:1px solid #ddd;padding:12px;margin:10px 0;border-radius:8px;">
+        <strong>${ride.from_location} → ${ride.to_location}</strong><br>
+        📅 ${ride.ride_date}<br>
+        🕐 ${ride.ride_time}<br>
+        💺 ${ride.seats} seats<br>
+        💰 $${ride.price}
+      </div>
+    `).join("");
+  }
 </script>
 
 </body>
