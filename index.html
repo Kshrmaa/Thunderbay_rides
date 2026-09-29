@@ -1,19 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thunder Bay Rides</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 25px 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input {
+      border: 1px solid #ccc;
+    }
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
 </head>
+
 <body>
+
+<header>
   <h1>🚗 Thunder Bay Rides</h1>
-  <p>Find a ride or post your own ride.</p>
+  <p>Find or post a ride in Thunder Bay</p>
+</header>
 
-  <h2>Find a Ride</h2>
-  <input type="text" placeholder="From">
-  <input type="text" placeholder="To">
-  <input type="date">
-  <button>Search Rides</button>
+<div class="container">
 
-  <h2>Post a Ride</h2>
-  <button>Post a Ride</button>
+  <div class="card">
+    <h2>🔎 Find a Ride</h2>
+    <input id="searchFrom" placeholder="From">
+    <input id="searchTo" placeholder="To">
+    <button onclick="findRides()">Find Rides</button>
+  </div>
+
+  <div class="card">
+    <h2>➕ Post a Ride</h2>
+    <input id="from" placeholder="From">
+    <input id="to" placeholder="To">
+    <input id="date" type="date">
+    <input id="time" type="time">
+    <input id="seats" type="number" placeholder="Available seats">
+    <input id="price" type="number" placeholder="Price ($)">
+    <button onclick="postRide()">Post Ride</button>
+
+    <div id="message"></div>
+  </div>
+
+  <div class="card">
+    <h2>Available Rides</h2>
+    <div id="rides">No rides loaded yet.</div>
+  </div>
+
+</div>
+
+<script>
+  function postRide() {
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    const seats = document.getElementById("seats").value;
+    const price = document.getElementById("price").value;
+
+    if (!from || !to || !date || !time || !seats || !price) {
+      document.getElementById("message").innerText =
+        "Please fill in all fields.";
+      return;
+    }
+
+    document.getElementById("message").innerText =
+      "Ride information entered successfully!";
+
+    console.log({
+      from,
+      to,
+      date,
+      time,
+      seats,
+      price
+    });
+  }
+
+  function findRides() {
+    document.getElementById("rides").innerText =
+      "Ride search will be connected to the database next.";
+  }
+</script>
+
 </body>
 </html>
